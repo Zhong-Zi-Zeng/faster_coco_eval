@@ -48,7 +48,30 @@ class PreviewResults(ExtraEval):
             fillcolor="rgba{}".format(color),
             line=dict(color="rgb{}".format(color[:3])),
         )
+        
+        def get_tp_fp_fn(self, image_id=1):
+            dt_anns = {ann["id"]: ann for ann in self.cocoDt.imgToAnns[image_id]}
+            gt_anns = {ann["id"]: ann for ann in self.cocoGt.imgToAnns[image_id]}
+    
+            cat_ids = self.cocoGt.cats.values()
+    
+            tp =  np.zeros(len(cat_ids), dtype=np.float32)
+            fp =  np.zeros(len(cat_ids), dtype=np.float32)
+            fn =  np.zeros(len(cat_ids), dtype=np.float32)
 
+            for cat_id in range(len(cat_ids)):
+                for ann in dt_anns.values():
+                    if ann["category_id"] == cat_id:
+                        if ann.get("tp", False):
+                            tp[cat_id] += 1
+                        else:
+                            fp[cat_id] += 1
+                for ann in gt_anns.values():
+                    if ann["category_id"] == cat_id:
+                        if ann.get("fn", False):
+                            fn[cat_id] += 1
+    
+            return tp, fp, fn
     def display_image(
         self,
         image_id=1,
