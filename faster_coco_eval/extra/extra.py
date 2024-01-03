@@ -16,8 +16,7 @@ class ExtraEval:
         min_score: float = 0,
         iou_tresh: float = 0.0,
         recall_count: int = 100,
-        useCats: bool = False,
-        img_ids:list=None
+        useCats: bool = False,        
     ):
         self.iouType = iouType
         self.min_score = min_score
@@ -26,7 +25,6 @@ class ExtraEval:
         self.recall_count = recall_count
         self.cocoGt = copy.deepcopy(cocoGt)
         self.cocoDt = copy.deepcopy(cocoDt)
-        self.img_ids = img_ids
         
         self.evaluate()
         
@@ -43,7 +41,7 @@ class ExtraEval:
 
         self.cocoEval = cocoEval
         
-        cocoEval.evaluate(self.img_ids)
+        cocoEval.evaluate()
         cocoEval.accumulate()
 
         self.eval = cocoEval.eval
