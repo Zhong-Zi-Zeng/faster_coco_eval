@@ -19,7 +19,7 @@ class COCOeval_faster(COCOeval):
     and accumulate() are implemented in C++ to speedup evaluation
     """
 
-    def evaluate(self):
+    def evaluate(self, img_ids: list=None):
         """
         Run per image evaluation on given images and store results in self.evalImgs_cpp, a
         datastructure that isn't readable from Python but is used by a c++ implementation of
@@ -36,7 +36,11 @@ class COCOeval_faster(COCOeval):
 
         self.print_function("Evaluate annotation type *{}*".format(p.iouType))
 
-        p.imgIds = list(np.unique(p.imgIds))
+        if img_ids is not None:
+            p.imgIds = img_ids
+        else:
+            p.imgIds = list(np.unique(p.imgIds))
+            
         if p.useCats:
             p.catIds = list(np.unique(p.catIds))
         p.maxDets = sorted(p.maxDets)
