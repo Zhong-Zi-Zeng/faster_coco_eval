@@ -28,7 +28,7 @@ class ExtraEval:
 
         self.evaluate()
 
-    def evaluate(self):
+    def evaluate(self, img_ids:list=None):
         cocoEval = COCOeval_faster(self.cocoGt, self.cocoDt, self.iouType, extra_calc=True)
         cocoEval.params.maxDets = [len(self.cocoGt.anns)]
 
@@ -40,8 +40,8 @@ class ExtraEval:
         cocoEval.params.useCats = int(self.useCats)  # Выключение labels
 
         self.cocoEval = cocoEval
-
-        cocoEval.evaluate()
+        
+        cocoEval.evaluate(img_ids)
         cocoEval.accumulate()
 
         self.eval = cocoEval.eval
